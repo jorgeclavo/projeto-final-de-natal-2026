@@ -1,622 +1,630 @@
-/* ==========================================================
-   KROMA STORE | js/script.js
-   Todos os recursos de JavaScript do site.
-   Precisa do js/produtos.js carregado ANTES (ele cria o array "produtos").
+/* ==========================================================================
+   KROMA STORE - SCRIPT PRINCIPAL (AV2 DESENVOLVIMENTO WEB)
+   Recursos implementados:
+   1. Slideshow automático com botões e indicadores (Obrigatório)
+   2. Efeito Parallax na rolagem (Obrigatório)
+   3. Controle de Música Natalina e Efeito Sonoro de Sino (Obrigatório)
+   4. Geração Dinâmica de Cards - Catálogo e Destaques (Obrigatório)
+   5. Filtro por Categoria e Busca em Tempo Real (Obrigatório)
+   6. Carrinho de Compras com localStorage e Remoção de Itens (Extra 1)
+   7. Contagem Regressiva para o Natal (Extra 2)
+   8. Validação do Formulário de Contato (Extra 3)
+   9. Menu Responsivo Hambúrguer (Extra 4)
+   10. Animação ao Rolar com IntersectionObserver (Extra 5)
+   11. Botão Voltar ao Topo (Extra 6)
+   12. Modal / Lightbox de Detalhes do Produto (Extra 7 - Novo)
+   13. Efeito de Neve Natalina Gerado por JS (Extra 8 - Novo)
+   ========================================================================== */
 
-   Cada recurso só roda se os elementos dele existirem na página,
-   então o mesmo arquivo serve para as 5 páginas sem dar erro.
+// Garante acesso seguro ao array 'produtos' vindo de js/produtos.js
+const catalogoProdutos = typeof produtos !== "undefined" ? produtos : [];
 
-   RECURSOS
-    1. Menu hambúrguer ........... todas as páginas
-    2. Voltar ao topo ............ todas as páginas
-    3. Parallax .................. Início
-    4. Slideshow ................. Início
-    5. Produtos em destaque ...... Início
-    6. Sons (música + sino) ...... todas as páginas
-    7. Contagem regressiva ....... Sobre e Ofertas
-    8. Catálogo, filtro e busca .. Produtos
-    9. Carrinho (localStorage) ... Produtos
-   10. Validação do formulário ... Contato
-   ========================================================== */
-
-
-/* ==========================================================
-   FUNÇÕES AUXILIARES
-   ========================================================== */
-const porId = (id) => document.getElementById(id);
-
-const reduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-function formatarPreco(valor) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(valor);
-}
-
-// lê/grava no localStorage sem quebrar se o navegador bloquear
-function lerStorage(chave, padrao) {
-    try {
-        const valor = localStorage.getItem(chave);
-        return valor === null ? padrao : JSON.parse(valor);
-    } catch (erro) {
-        return padrao;
-    }
-}
-
-function gravarStorage(chave, valor) {
-    try {
-        localStorage.setItem(chave, JSON.stringify(valor));
-    } catch (erro) { /* sem storage: segue sem salvar */ }
-}
-
-
-/* ==========================================================
-   1. MENU HAMBÚRGUER (celular)
-   Liga/desliga a classe "aberto" no menu.
-   ========================================================== */
-function iniciarMenu() {
-    const botao = document.querySelector('.btn-menu');
-    const menu = document.querySelector('.nav-links');
-    if (!botao || !menu) return;
-
-    botao.addEventListener('click', () => {
-        const aberto = menu.classList.toggle('aberto');
-        botao.setAttribute('aria-expanded', String(aberto));
-    });
-}
-
-
-/* ==========================================================
-   2. BOTÃO VOLTAR AO TOPO
-   Só aparece depois de rolar 400px.
-   ========================================================== */
-function iniciarTopo() {
-    const botao = porId('topo');
-    if (!botao) return;
-
-    const atualizar = () => {
-        botao.style.display = window.scrollY > 400 ? 'block' : 'none';
-    };
-
-    window.addEventListener('scroll', atualizar, { passive: true });
-    botao.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    atualizar();
-}
-
-
-/* ==========================================================
-   3. PARALLAX
-   Elementos com data-velocidade se movem uma fração da rolagem.
-   Velocidades diferentes criam sensação de profundidade.
-   ========================================================== */
-function iniciarParallax() {
-    const camadas = document.querySelectorAll('[data-velocidade]');
-    if (!camadas.length || reduzirMovimento) return;
-
-    let aguardando = false;
-
-    const mover = () => {
-        const rolagem = window.scrollY;
-        camadas.forEach((camada) => {
-            const velocidade = Number(camada.dataset.velocidade);
-            camada.style.transform = `translateY(${rolagem * velocidade}px)`;
-        });
-        aguardando = false;
-    };
-
-    window.addEventListener('scroll', () => {
-        if (!aguardando) {
-            window.requestAnimationFrame(mover);
-            aguardando = true;
+// ==========================================================================
+// ESTILOS AUXILIARES INJETADOS VIA JS (GARANTE FUNCIONAMENTO DO MODAL E SLIDES)
+// ==========================================================================
+function injetarEstilosAuxiliares() {
+    const style = document.createElement("style");
+    style.textContent = `
+        /* Garantia de exibição do Slideshow */
+        .slideshow { position: relative; }
+        .slide { display: none; }
+        .slide.ativo { display: block; animation: fadeSlide 0.6s ease; }
+        @keyframes fadeSlide { from { opacity: 0.3; } to { opacity: 1; } }
+        .indicadores-slide {
+            display: flex; justify-content: center; gap: 8px; margin-top: 12px;
         }
-    }, { passive: true });
+        .indicador-dot {
+            width: 12px; height: 12px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.4); cursor: pointer; transition: 0.3s;
+        }
+        .indicador-dot.ativo { background: #C9A227; transform: scale(1.2); }
+
+        /* Garantia de exibição das seções .revelar */
+        .revelar { opacity: 0; transform: translateY(25px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .revelar.visivel { opacity: 1; transform: translateY(0); }
+
+        /* Botão remover item no carrinho */
+        .btn-remover-item {
+            background: #B3202A; color: #fff; border: none; border-radius: 4px;
+            padding: 2px 7px; margin-left: 8px; cursor: pointer; font-size: 0.8rem;
+        }
+        .btn-remover-item:hover { opacity: 0.85; }
+
+        /* Modal / Lightbox de Detalhes do Produto */
+        .modal-kroma-overlay {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78);
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; padding: 20px;
+        }
+        .modal-kroma-overlay.aberto { display: flex; }
+        .modal-kroma-box {
+            background: #FBF6EA; color: #12263F; max-width: 720px; width: 100%;
+            border-radius: 14px; padding: 24px; position: relative;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+        .modal-kroma-box img {
+            width: 100%; border-radius: 10px; background: #fff; object-fit: contain;
+        }
+        .modal-kroma-fechar {
+            position: absolute; top: 12px; right: 14px; background: #B3202A;
+            color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%;
+            font-size: 1rem; cursor: pointer;
+        }
+        .modal-kroma-categoria {
+            display: inline-block; background: #1F5D3A; color: #fff;
+            padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; margin-bottom: 8px;
+        }
+        .modal-kroma-preco {
+            font-size: 1.4rem; font-weight: 700; color: #B3202A; margin: 12px 0;
+        }
+
+        /* Flocos de Neve Natalinos */
+        .floco-neve-js {
+            position: fixed; top: -20px; color: #ffffff; user-select: none;
+            pointer-events: none; z-index: 9990; opacity: 0.8;
+            animation: cairNeve linear forwards;
+        }
+        @keyframes cairNeve {
+            to { transform: translateY(105vh) rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
 }
 
-
-/* ==========================================================
-   4. SLIDESHOW / CARROSSEL
-   Troca sozinho a cada 5s, com setas e bolinhas indicadoras.
-   ========================================================== */
-function iniciarSlideshow() {
-    const slides = document.querySelectorAll('.slide');
-    const area = document.querySelector('.slideshow');
-    if (!slides.length || !area) return;
-
-    let atual = 0;
-    let temporizador = null;
-
-    // bolinhas indicadoras (criadas com um laço)
-    const indicadores = document.createElement('div');
-    indicadores.className = 'slide-indicadores';
-    const pontos = [];
-
-    slides.forEach((slide, i) => {
-        const ponto = document.createElement('button');
-        ponto.type = 'button';
-        ponto.className = 'ponto';
-        ponto.setAttribute('aria-label', `Ir para o slide ${i + 1}`);
-        ponto.addEventListener('click', () => { mostrarSlide(i); reiniciar(); });
-        indicadores.appendChild(ponto);
-        pontos.push(ponto);
+// ==========================================================================
+// UTILITÁRIO: FORMATAÇÃO DE MOEDA (R$)
+// ==========================================================================
+function formatarPreco(valor) {
+    return Number(valor).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
     });
-    area.appendChild(indicadores);
+}
+
+// ==========================================================================
+// RECURSO 3 (OBRIGATÓRIO): MÚSICA DE FUNDO NATALINA
+// ==========================================================================
+const musicaNatal = new Audio("audio/tape-echo-christmas-winter-days_29sec-596030.mp3");
+musicaNatal.loop = true;
+musicaNatal.volume = 0.25; // Volume suave conforme regra do manual
+
+function iniciarControleAudio() {
+    const btnMusica = document.getElementById("btn-musica");
+    if (!btnMusica) return;
+
+    btnMusica.addEventListener("click", () => {
+        if (musicaNatal.paused) {
+            musicaNatal.play()
+                .then(() => {
+                    btnMusica.textContent = "⏸️ Pausar Música";
+                })
+                .catch((erro) => {
+                    console.error("Erro ao carregar áudio:", erro);
+                    btnMusica.textContent = "🔇 Áudio indisponível";
+                });
+        } else {
+            musicaNatal.pause();
+            btnMusica.textContent = "🔊 Tocar Música";
+        }
+    });
+}
+
+// ==========================================================================
+// RECURSO 1 (OBRIGATÓRIO): SLIDESHOW COM BOTÕES E INDICADORES
+// ==========================================================================
+function iniciarSlideshow() {
+    const slides = document.querySelectorAll(".slide");
+    const btnAnterior = document.getElementById("anterior");
+    const btnProximo = document.getElementById("proximo");
+    const containerSlideshow = document.querySelector(".slideshow");
+
+    if (!slides.length || !containerSlideshow) return;
+
+    let slideAtual = 0;
+
+    // Cria os indicadores (bolinhas) dinamicamente
+    const barraIndicadores = document.createElement("div");
+    barraIndicadores.className = "indicadores-slide";
+
+    slides.forEach((_, indice) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = indice === 0 ? "indicador-dot ativo" : "indicador-dot";
+        dot.setAttribute("aria-label", `Ir para slide ${indice + 1}`);
+        dot.addEventListener("click", () => mostrarSlide(indice));
+        barraIndicadores.appendChild(dot);
+    });
+    containerSlideshow.appendChild(barraIndicadores);
+
+    const dots = barraIndicadores.querySelectorAll(".indicador-dot");
 
     function mostrarSlide(indice) {
-        slides.forEach((s) => s.classList.remove('ativo'));
-        pontos.forEach((p) => p.classList.remove('ativo'));
-        atual = (indice + slides.length) % slides.length; // volta ao início/fim
-        slides[atual].classList.add('ativo');
-        pontos[atual].classList.add('ativo');
+        slides.forEach((s) => s.classList.remove("ativo"));
+        dots.forEach((d) => d.classList.remove("ativo"));
+
+        slideAtual = (indice + slides.length) % slides.length;
+        slides[slideAtual].classList.add("ativo");
+        if (dots[slideAtual]) dots[slideAtual].classList.add("ativo");
     }
 
-    function reiniciar() {
-        clearInterval(temporizador);
-        if (!reduzirMovimento) temporizador = setInterval(() => mostrarSlide(atual + 1), 5000);
-    }
+    if (btnProximo) btnProximo.addEventListener("click", () => mostrarSlide(slideAtual + 1));
+    if (btnAnterior) btnAnterior.addEventListener("click", () => mostrarSlide(slideAtual - 1));
 
-    const proximo = porId('proximo');
-    const anterior = porId('anterior');
-    if (proximo) proximo.addEventListener('click', () => { mostrarSlide(atual + 1); reiniciar(); });
-    if (anterior) anterior.addEventListener('click', () => { mostrarSlide(atual - 1); reiniciar(); });
-
-    mostrarSlide(0);
-    reiniciar();
+    // Troca automática a cada 5 segundos
+    setInterval(() => mostrarSlide(slideAtual + 1), 5000);
 }
 
+// ==========================================================================
+// RECURSO 2 (OBRIGATÓRIO): PARALLAX EM JAVASCRIPT
+// ==========================================================================
+function iniciarParallax() {
+    const camadas = document.querySelectorAll("[data-velocidade]");
+    if (!camadas.length) return;
 
-/* ==========================================================
-   5. PRODUTOS EM DESTAQUE (Início)
-   Mostra os produtos com destaque: true no js/produtos.js.
-   ========================================================== */
-function iniciarDestaques() {
-    const area = porId('produtos-destaque');
-    if (!area || typeof produtos === 'undefined') return;
+    let aguardandoFrame = false;
 
-    const destaques = produtos.filter((produto) => produto.destaque);
+    window.addEventListener("scroll", () => {
+        if (!aguardandoFrame) {
+            window.requestAnimationFrame(() => {
+                const rolagem = window.scrollY;
+                camadas.forEach((camada) => {
+                    const velocidade = parseFloat(camada.dataset.velocidade) || 0.2;
+                    camada.style.transform = `translateY(${rolagem * velocidade}px)`;
+                });
+                aguardandoFrame = false;
+            });
+            aguardandoFrame = true;
+        }
+    });
+}
 
-    if (!destaques.length) {
-        area.innerHTML = '<p>Em breve novos lançamentos.</p>';
+// ==========================================================================
+// RECURSO 6 (EXTRA): CARRINHO DE COMPRAS COM LOCALSTORAGE E REMOÇÃO
+// ==========================================================================
+let carrinho = JSON.parse(localStorage.getItem("kroma_carrinho")) || [];
+
+function salvarCarrinho() {
+    localStorage.setItem("kroma_carrinho", JSON.stringify(carrinho));
+}
+
+function atualizarCarrinhoUI() {
+    const qtdCarrinho = document.getElementById("qtd-carrinho");
+    const qtdCarrinhoBotao = document.getElementById("qtd-carrinho-botao");
+    const totalCarrinho = document.getElementById("total-carrinho");
+    const totalCarrinhoPanel = document.getElementById("total-carrinho-panel");
+    const listaCarrinho = document.getElementById("lista-carrinho");
+
+    const totalItens = carrinho.reduce((soma, item) => soma + item.quantidade, 0);
+    const totalValor = carrinho.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
+
+    if (qtdCarrinho) qtdCarrinho.textContent = totalItens;
+    if (qtdCarrinhoBotao) qtdCarrinhoBotao.textContent = totalItens;
+    if (totalCarrinho) totalCarrinho.textContent = formatarPreco(totalValor);
+    if (totalCarrinhoPanel) totalCarrinhoPanel.textContent = formatarPreco(totalValor);
+
+    if (!listaCarrinho) return;
+
+    if (!carrinho.length) {
+        listaCarrinho.innerHTML = '<li class="carrinho-vazio">Seu carrinho está vazio.</li>';
         return;
     }
 
-    area.innerHTML = destaques.map((produto) => `
-        <article class="card-destaque">
-            <img src="${encodeURI(produto.imagem)}" alt="${produto.nome}" loading="lazy">
-            <h3>${produto.nome}</h3>
-            <p>${produto.descricao}</p>
-            <p class="preco">${formatarPreco(produto.preco)}</p>
-            <a href="produtos.html" class="btn-comprar">Ver no catálogo</a>
-        </article>
-    `).join('');
+    listaCarrinho.innerHTML = carrinho
+        .map((item, index) => `
+            <li>
+                <span>${item.nome} <strong>(x${item.quantidade})</strong></span>
+                <div>
+                    <strong>${formatarPreco(item.preco * item.quantidade)}</strong>
+                    <button type="button" class="btn-remover-item" data-index="${index}" aria-label="Remover item">✕</button>
+                </div>
+            </li>
+        `)
+        .join("");
 }
 
+function adicionarAoCarrinho(nome, preco) {
+    const existente = carrinho.find((item) => item.nome === nome);
+    if (existente) {
+        existente.quantidade += 1;
+    } else {
+        carrinho.push({ nome, preco: Number(preco), quantidade: 1 });
+    }
 
-/* ==========================================================
-   6. SONS
-   - Música de fundo (arquivo em audio/): botão liga/desliga,
-     volume baixo, e lembra se estava tocando ao trocar de página.
-   - Sino ao adicionar no carrinho: gerado pelo navegador (Web Audio),
-     não precisa de arquivo.
-   ========================================================== */
-let contextoAudio = null;
+    salvarCarrinho();
+    atualizarCarrinhoUI();
+    tocarSinoNatal();
 
-function tocarSino() {
-    try {
-        const Contexto = window.AudioContext || window.webkitAudioContext;
-        if (!Contexto) return;
-        if (!contextoAudio) contextoAudio = new Contexto();
-        if (contextoAudio.state === 'suspended') contextoAudio.resume();
+    const painelCarrinho = document.getElementById("carrinho-panel");
+    const btnCarrinho = document.getElementById("btn-carrinho");
+    if (painelCarrinho) painelCarrinho.classList.add("ativo");
+    if (btnCarrinho) btnCarrinho.setAttribute("aria-expanded", "true");
+}
 
-        const agora = contextoAudio.currentTime;
-        const ganho = contextoAudio.createGain();
-        ganho.gain.setValueAtTime(0.0001, agora);
-        ganho.gain.exponentialRampToValueAtTime(0.18, agora + 0.02);
-        ganho.gain.exponentialRampToValueAtTime(0.0001, agora + 1.4);
-        ganho.connect(contextoAudio.destination);
+function removerDoCarrinho(index) {
+    if (carrinho[index].quantidade > 1) {
+        carrinho[index].quantidade -= 1;
+    } else {
+        carrinho.splice(index, 1);
+    }
+    salvarCarrinho();
+    atualizarCarrinhoUI();
+}
 
-        [880, 1320, 1760].forEach((frequencia, i) => {
-            const osc = contextoAudio.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.value = frequencia;
-            osc.connect(ganho);
-            osc.start(agora);
-            osc.stop(agora + 1.4 - i * 0.2);
+function iniciarEventosCarrinho() {
+    const btnCarrinho = document.getElementById("btn-carrinho");
+    const painelCarrinho = document.getElementById("carrinho-panel");
+    const btnFecharCarrinho = document.getElementById("fechar-carrinho");
+    const listaCarrinho = document.getElementById("lista-carrinho");
+
+    if (btnCarrinho && painelCarrinho) {
+        btnCarrinho.addEventListener("click", () => {
+            const aberto = painelCarrinho.classList.toggle("ativo");
+            btnCarrinho.setAttribute("aria-expanded", String(aberto));
         });
-    } catch (erro) { /* sem áudio: ignora */ }
-}
-
-function iniciarMusica() {
-    const botao = porId('btn-musica');
-    if (!botao) return;
-
-    const musica = new Audio('audio/tape-echo-christmas-winter-days_29sec-596030.mp3');
-    musica.loop = true;
-    musica.volume = 0.3; // volume baixo (0 a 1)
-
-    const estado = lerStorage('musica', { tocando: false, tempo: 0 });
-
-    const mostrarTocando = () => { botao.textContent = '⏸ Pausar música'; };
-    const mostrarParada = () => { botao.textContent = '🔊 Tocar Música'; };
-    const mostrarErro = (mensagem) => {
-        botao.textContent = '⚠ Áudio indisponível';
-        botao.title = mensagem;
-    };
-
-    musica.addEventListener('error', () => {
-        const erro = musica.error;
-        const mensagem = erro
-            ? `Não foi possível carregar a música (erro ${erro.code}). Abra o site por um servidor local, como o Live Server do VS Code.`
-            : 'Não foi possível carregar o arquivo de música.';
-        console.error(mensagem, erro);
-        mostrarErro(mensagem);
-    });
-
-    function tocar() {
-        return musica.play()
-            .then(() => {
-                botao.title = '';
-                mostrarTocando();
-                gravarStorage('musica', { tocando: true, tempo: musica.currentTime });
-            }).catch((erro) => {
-                console.error('Não foi possível iniciar a reprodução da música.', erro);
-                mostrarParada();
-                mostrarErro(erro.message || 'Não foi possível iniciar a reprodução da música.');
-            });
     }
 
-    botao.addEventListener('click', () => {
-        if (musica.paused) {
-            tocar();
-        } else {
-            musica.pause();
-            mostrarParada();
-            gravarStorage('musica', { tocando: false, tempo: musica.currentTime });
-        }
-    });
+    if (btnFecharCarrinho && painelCarrinho) {
+        btnFecharCarrinho.addEventListener("click", () => {
+            painelCarrinho.classList.remove("ativo");
+            if (btnCarrinho) btnCarrinho.setAttribute("aria-expanded", "false");
+        });
+    }
 
-    // guarda o ponto da música para continuar na próxima página
-    const salvarTempo = () => {
-        if (!musica.paused) gravarStorage('musica', { tocando: true, tempo: musica.currentTime });
-    };
-    window.addEventListener('pagehide', salvarTempo);
-    musica.addEventListener('timeupdate', salvarTempo);
-
-    // tenta retomar (o navegador pode bloquear até haver um clique)
-    if (estado.tocando) {
-        musica.currentTime = estado.tempo || 0;
-        tocar();
+    if (listaCarrinho) {
+        listaCarrinho.addEventListener("click", (event) => {
+            const btnRemover = event.target.closest(".btn-remover-item");
+            if (btnRemover) {
+                removerDoCarrinho(Number(btnRemover.dataset.index));
+            }
+        });
     }
 }
 
-
-/* ==========================================================
-   7. CONTAGEM REGRESSIVA PARA O NATAL
-   Atualiza a cada segundo. Funciona em #contagem (Sobre)
-   e #contagem-ofertas (Ofertas).
-   ========================================================== */
-function iniciarContagem() {
-    const alvos = [porId('contagem'), porId('contagem-ofertas')].filter(Boolean);
-    if (!alvos.length) return;
-
-    function atualizar() {
-        const agora = new Date();
-        let natal = new Date(agora.getFullYear(), 11, 25); // mês 11 = dezembro
-        if (agora > natal) natal = new Date(agora.getFullYear() + 1, 11, 25);
-
-        const falta = natal - agora; // milissegundos
-        const dias = Math.floor(falta / (1000 * 60 * 60 * 24));
-        const horas = Math.floor(falta / (1000 * 60 * 60)) % 24;
-        const minutos = Math.floor(falta / (1000 * 60)) % 60;
-        const segundos = Math.floor(falta / 1000) % 60;
-
-        const texto = `${dias}d ${horas}h ${minutos}min ${segundos}s para o Natal`;
-        alvos.forEach((alvo) => { alvo.textContent = texto; });
-    }
-
-    atualizar();
-    setInterval(atualizar, 1000);
-}
-
-
-/* ==========================================================
-   8. CATÁLOGO, FILTRO E BUSCA (Produtos)
-   Cria os cards a partir do array "produtos", agrupados por
-   categoria, e atualiza na hora conforme busca/categoria.
-   ========================================================== */
-const listaProdutos = porId('lista-produtos');
-const buscaInput = porId('busca');
-const categoriaSelect = porId('categoria');
-const contadorProdutos = porId('contador');
-
+// ==========================================================================
+// RECURSO 4 E 5 (OBRIGATÓRIOS): CARDS DINÂMICOS, FILTRO E BUSCA
+// ==========================================================================
 function gerarCardProduto(produto) {
     return `
-        <article class="produto-card">
-            <img src="${encodeURI(produto.imagem)}" alt="${produto.nome}" loading="lazy">
+        <article class="produto-card" data-produto-nome="${produto.nome}">
+            <img src="${encodeURI(produto.imagem)}" alt="${produto.nome}" loading="lazy" class="gatilho-modal" style="cursor:pointer;">
             <div class="produto-info">
                 <span class="produto-categoria">${produto.categoria}</span>
-                <h3>${produto.nome}</h3>
+                <h3 class="gatilho-modal" style="cursor:pointer;">${produto.nome}</h3>
                 <p class="produto-descricao">${produto.descricao}</p>
                 <p class="produto-valor">${formatarPreco(produto.preco)}</p>
                 <div class="produto-acoes">
-                    <button class="btn-comprar" type="button" data-id="${produto.id}">Adicionar ao carrinho</button>
+                    <button class="btn-comprar" type="button" data-nome="${produto.nome}" data-preco="${produto.preco}">
+                        Adicionar ao carrinho
+                    </button>
                 </div>
             </div>
         </article>
     `;
 }
 
-function renderizarCatalogo() {
-    if (!listaProdutos || typeof produtos === 'undefined') return;
+function renderizarDestaquesHome() {
+    const areaDestaques = document.getElementById("produtos-destaque");
+    if (!areaDestaques || !catalogoProdutos.length) return;
 
-    const termo = buscaInput ? buscaInput.value.trim().toLowerCase() : '';
-    const categoriaAtual = categoriaSelect ? categoriaSelect.value : 'todas';
+    // Filtra itens marcados com destaque: true (ou pega os 4 primeiros como fallback)
+    let destaques = catalogoProdutos.filter((p) => p.destaque === true);
+    if (!destaques.length) destaques = catalogoProdutos.slice(0, 4);
 
-    const filtrados = produtos.filter((produto) => {
-        const bateCategoria = categoriaAtual === 'todas' || produto.categoria === categoriaAtual;
-        const bateBusca = !termo
-            || produto.nome.toLowerCase().includes(termo)
-            || produto.descricao.toLowerCase().includes(termo);
-        return bateCategoria && bateBusca;
+    areaDestaques.innerHTML = destaques.map(gerarCardProduto).join("");
+
+    areaDestaques.addEventListener("click", (event) => {
+        const botao = event.target.closest(".btn-comprar");
+        if (botao) {
+            adicionarAoCarrinho(botao.dataset.nome, botao.dataset.preco);
+            return;
+        }
+        const gatilho = event.target.closest(".gatilho-modal");
+        if (gatilho) {
+            const card = gatilho.closest(".produto-card");
+            const prod = catalogoProdutos.find((p) => p.nome === card.dataset.produtoNome);
+            if (prod) abrirModalProduto(prod);
+        }
     });
-
-    if (contadorProdutos) {
-        contadorProdutos.textContent = `Mostrando ${filtrados.length} de ${produtos.length} produtos`;
-    }
-
-    if (!filtrados.length) {
-        listaProdutos.innerHTML = '<p class="contador-produtos">🎄 Nenhum produto encontrado para os filtros selecionados.</p>';
-        return;
-    }
-
-    const categorias = [...new Set(filtrados.map((produto) => produto.categoria))];
-
-    listaProdutos.innerHTML = categorias.map((categoria) => `
-        <div class="categoria-grupo">
-            <h2>${categoria}</h2>
-            <div class="grade-catalogo">
-                ${filtrados.filter((p) => p.categoria === categoria).map(gerarCardProduto).join('')}
-            </div>
-        </div>
-    `).join('');
 }
 
-function iniciarCatalogo() {
+function iniciarCatalogoProdutos() {
+    const listaProdutos = document.getElementById("lista-produtos");
     if (!listaProdutos) return;
 
-    if (buscaInput) buscaInput.addEventListener('input', renderizarCatalogo);
-    if (categoriaSelect) categoriaSelect.addEventListener('change', renderizarCatalogo);
+    const buscaInput = document.getElementById("busca");
+    const categoriaSelect = document.getElementById("categoria");
+    const contadorProdutos = document.getElementById("contador");
 
-    // delegação de evento: os botões são criados pelo JS
-    listaProdutos.addEventListener('click', (evento) => {
-        const botao = evento.target.closest('.btn-comprar');
-        if (!botao) return;
-        adicionarAoCarrinho(Number(botao.dataset.id));
-    });
+    function renderizar() {
+        const termoBusca = buscaInput ? buscaInput.value.trim().toLowerCase() : "";
+        const categoriaAtual = categoriaSelect ? categoriaSelect.value : "todas";
 
-    renderizarCatalogo();
-}
+        const categoriasUnicas = [...new Set(catalogoProdutos.map((p) => p.categoria))];
 
+        const gruposFiltrados = categoriasUnicas
+            .map((categoria) => {
+                const itens = catalogoProdutos.filter((produto) => {
+                    const bateCategoria = categoriaAtual === "todas" || produto.categoria === categoriaAtual;
+                    const bateBusca =
+                        !termoBusca ||
+                        produto.nome.toLowerCase().includes(termoBusca) ||
+                        produto.descricao.toLowerCase().includes(termoBusca);
+                    return bateCategoria && bateBusca && produto.categoria === categoria;
+                });
+                return { categoria, itens };
+            })
+            .filter((grupo) => grupo.itens.length > 0);
 
-/* ==========================================================
-   9. CARRINHO DE COMPRAS
-   Adicionar, aumentar/diminuir, remover, total e quantidade.
-   Salvo no localStorage (continua ao recarregar a página).
-   ========================================================== */
-const btnCarrinho = porId('btn-carrinho');
-const painelCarrinho = porId('carrinho-panel');
-const btnFecharCarrinho = porId('fechar-carrinho');
-const listaCarrinho = porId('lista-carrinho');
-const totalCarrinho = porId('total-carrinho');
-const totalCarrinhoPanel = porId('total-carrinho-panel');
-const qtdCarrinho = porId('qtd-carrinho');
-const qtdCarrinhoBotao = porId('qtd-carrinho-botao');
-
-// cada item: { id, quantidade }
-let carrinho = [];
-
-function carregarCarrinho() {
-    const salvo = lerStorage('carrinho', []);
-    if (!Array.isArray(salvo) || typeof produtos === 'undefined') return;
-
-    // descarta itens inválidos ou de produtos que não existem mais
-    carrinho = salvo.filter((item) =>
-        item && Number.isInteger(item.quantidade) && item.quantidade > 0
-        && produtos.some((produto) => produto.id === item.id)
-    );
-}
-
-function salvarCarrinho() {
-    gravarStorage('carrinho', carrinho);
-}
-
-function abrirPainelCarrinho(abrir) {
-    if (!painelCarrinho) return;
-    painelCarrinho.classList.toggle('ativo', abrir);
-    if (btnCarrinho) btnCarrinho.setAttribute('aria-expanded', String(abrir));
-}
-
-function atualizarCarrinho() {
-    if (typeof produtos === 'undefined') return;
-
-    const itens = carrinho.map((item) => ({
-        ...produtos.find((produto) => produto.id === item.id),
-        quantidade: item.quantidade
-    }));
-
-    const totalItens = itens.reduce((soma, item) => soma + item.quantidade, 0);
-    const totalCompra = itens.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
-
-    if (qtdCarrinho) qtdCarrinho.textContent = totalItens;
-    if (qtdCarrinhoBotao) qtdCarrinhoBotao.textContent = totalItens;
-    if (totalCarrinho) totalCarrinho.textContent = formatarPreco(totalCompra);
-    if (totalCarrinhoPanel) totalCarrinhoPanel.textContent = formatarPreco(totalCompra);
-
-    if (!listaCarrinho) return;
-
-    if (!itens.length) {
-        listaCarrinho.innerHTML = '<li class="carrinho-vazio">Seu carrinho está vazio.</li>';
-        return;
-    }
-
-    listaCarrinho.innerHTML = itens.map((item) => `
-        <li>
-            <div class="item-info">
-                <span class="item-nome">${item.nome}</span>
-                <strong>${formatarPreco(item.preco * item.quantidade)}</strong>
-            </div>
-            <div class="item-acoes">
-                <button type="button" class="btn-qtd" data-acao="menos" data-id="${item.id}" aria-label="Diminuir quantidade">−</button>
-                <span class="item-qtd">${item.quantidade}</span>
-                <button type="button" class="btn-qtd" data-acao="mais" data-id="${item.id}" aria-label="Aumentar quantidade">+</button>
-                <button type="button" class="btn-remover" data-acao="remover" data-id="${item.id}" aria-label="Remover ${item.nome}">✕</button>
-            </div>
-        </li>
-    `).join('');
-}
-
-function adicionarAoCarrinho(id) {
-    const existente = carrinho.find((item) => item.id === id);
-
-    if (existente) {
-        existente.quantidade += 1;
-    } else {
-        carrinho.push({ id, quantidade: 1 });
-    }
-
-    salvarCarrinho();
-    atualizarCarrinho();
-    abrirPainelCarrinho(true);
-    tocarSino();
-}
-
-function alterarItem(id, acao) {
-    const item = carrinho.find((i) => i.id === id);
-    if (!item) return;
-
-    if (acao === 'mais') item.quantidade += 1;
-    if (acao === 'menos') item.quantidade -= 1;
-
-    // zerou ou clicou em remover: tira do carrinho
-    if (acao === 'remover' || item.quantidade <= 0) {
-        carrinho = carrinho.filter((i) => i.id !== id);
-    }
-
-    salvarCarrinho();
-    atualizarCarrinho();
-}
-
-function iniciarCarrinho() {
-    carregarCarrinho();
-    atualizarCarrinho();
-
-    if (btnCarrinho && painelCarrinho) {
-        btnCarrinho.addEventListener('click', () => {
-            abrirPainelCarrinho(!painelCarrinho.classList.contains('ativo'));
-        });
-    }
-
-    if (btnFecharCarrinho) {
-        btnFecharCarrinho.addEventListener('click', () => abrirPainelCarrinho(false));
-    }
-
-    if (listaCarrinho) {
-        listaCarrinho.addEventListener('click', (evento) => {
-            const botao = evento.target.closest('button[data-acao]');
-            if (!botao) return;
-            alterarItem(Number(botao.dataset.id), botao.dataset.acao);
-        });
-    }
-}
-
-
-/* ==========================================================
-   10. VALIDAÇÃO DO FORMULÁRIO (Contato)
-   Campos obrigatórios, formato de e-mail, mensagens de
-   erro e de sucesso.
-   ========================================================== */
-function iniciarFormulario() {
-    const formulario = porId('form-contato');
-    const caixa = porId('mensagem-form');
-    if (!formulario || !caixa) return;
-
-    const campos = {
-        nome: porId('nome'),
-        email: porId('email'),
-        assunto: porId('assunto'),
-        mensagem: porId('mensagem')
-    };
-
-    const regraEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // tirar o destaque vermelho ao voltar a digitar
-    Object.values(campos).forEach((campo) => {
-        campo.addEventListener('input', () => campo.classList.remove('erro'));
-    });
-
-    formulario.addEventListener('submit', (evento) => {
-        evento.preventDefault(); // impede a página de recarregar
-
-        const valores = {
-            nome: campos.nome.value.trim(),
-            email: campos.email.value.trim(),
-            assunto: campos.assunto.value.trim(),
-            mensagem: campos.mensagem.value.trim()
-        };
-
-        const erros = [];
-        const invalidos = [];
-
-        if (valores.nome.length < 3) {
-            erros.push('Digite seu nome completo (mínimo 3 letras).');
-            invalidos.push(campos.nome);
-        }
-        if (valores.email === '') {
-            erros.push('Digite seu e-mail.');
-            invalidos.push(campos.email);
-        } else if (!regraEmail.test(valores.email)) {
-            erros.push('Digite um e-mail válido, como nome@exemplo.com.');
-            invalidos.push(campos.email);
-        }
-        if (valores.assunto.length < 3) {
-            erros.push('Digite o assunto da mensagem.');
-            invalidos.push(campos.assunto);
-        }
-        if (valores.mensagem.length < 10) {
-            erros.push('Escreva uma mensagem com pelo menos 10 caracteres.');
-            invalidos.push(campos.mensagem);
-        }
-
-        Object.values(campos).forEach((campo) => campo.classList.remove('erro'));
-        caixa.classList.remove('erro', 'sucesso');
-
-        if (erros.length) {
-            invalidos.forEach((campo) => campo.classList.add('erro'));
-            caixa.classList.add('erro');
-            caixa.innerHTML = erros.map((erro) => `• ${erro}`).join('<br>');
-            invalidos[0].focus();
+        if (!gruposFiltrados.length) {
+            listaProdutos.innerHTML = '<p class="contador-produtos">🎄 Nenhum produto encontrado para os filtros selecionados.</p>';
+            if (contadorProdutos) contadorProdutos.textContent = `Mostrando 0 de ${catalogoProdutos.length} produtos`;
             return;
         }
 
-        caixa.classList.add('sucesso');
-        caixa.textContent = `Obrigado, ${valores.nome}! Sua mensagem foi enviada. 🎄`;
-        formulario.reset();
+        listaProdutos.innerHTML = gruposFiltrados
+            .map((grupo) => `
+                <div class="categoria-grupo">
+                    <h2>${grupo.categoria}</h2>
+                    <div class="grade-catalogo">
+                        ${grupo.itens.map(gerarCardProduto).join("")}
+                    </div>
+                </div>
+            `)
+            .join("");
+
+        const totalExibido = gruposFiltrados.reduce((soma, g) => soma + g.itens.length, 0);
+        if (contadorProdutos) {
+            contadorProdutos.textContent = `Mostrando ${totalExibido} de ${catalogoProdutos.length} produtos`;
+        }
+    }
+
+    // Delegação de eventos para Comprar e Abrir Modal
+    listaProdutos.addEventListener("click", (event) => {
+        const botao = event.target.closest(".btn-comprar");
+        if (botao) {
+            adicionarAoCarrinho(botao.dataset.nome, botao.dataset.preco);
+            return;
+        }
+
+        const gatilho = event.target.closest(".gatilho-modal");
+        if (gatilho) {
+            const card = gatilho.closest(".produto-card");
+            const prod = catalogoProdutos.find((p) => p.nome === card.dataset.produtoNome);
+            if (prod) abrirModalProduto(prod);
+        }
+    });
+
+    if (buscaInput) buscaInput.addEventListener("input", renderizar);
+    if (categoriaSelect) categoriaSelect.addEventListener("change", renderizar);
+
+    renderizar();
+}
+
+// ==========================================================================
+// RECURSO 12 (NOVO - EXTRA 7): MODAL / LIGHTBOX DE DETALHES DO PRODUTO
+// ==========================================================================
+let modalOverlay = null;
+
+function criarEstruturaModal() {
+    modalOverlay = document.createElement("div");
+    modalOverlay.className = "modal-kroma-overlay";
+    modalOverlay.innerHTML = `
+        <div class="modal-kroma-box" role="dialog" aria-modal="true">
+            <button type="button" class="modal-kroma-fechar" aria-label="Fechar detalhes">✕</button>
+            <img id="modal-img" src="" alt="">
+            <div>
+                <span id="modal-cat" class="modal-kroma-categoria"></span>
+                <h2 id="modal-titulo"></h2>
+                <p id="modal-desc"></p>
+                <p id="modal-preco" class="modal-kroma-preco"></p>
+                <button type="button" id="modal-btn-comprar" class="btn-comprar">Adicionar ao carrinho</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalOverlay);
+
+    modalOverlay.querySelector(".modal-kroma-fechar").addEventListener("click", fecharModalProduto);
+    modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) fecharModalProduto();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") fecharModalProduto();
     });
 }
 
+function abrirModalProduto(produto) {
+    if (!modalOverlay) criarEstruturaModal();
 
-/* ==========================================================
-   INICIALIZAÇÃO
-   ========================================================== */
-window.addEventListener('DOMContentLoaded', () => {
-    iniciarMenu();
-    iniciarTopo();
-    iniciarParallax();
+    modalOverlay.querySelector("#modal-img").src = encodeURI(produto.imagem);
+    modalOverlay.querySelector("#modal-img").alt = produto.nome;
+    modalOverlay.querySelector("#modal-cat").textContent = produto.categoria;
+    modalOverlay.querySelector("#modal-titulo").textContent = produto.nome;
+    modalOverlay.querySelector("#modal-desc").textContent = produto.descricao;
+    modalOverlay.querySelector("#modal-preco").textContent = formatarPreco(produto.preco);
+
+    const btnComprarModal = modalOverlay.querySelector("#modal-btn-comprar");
+    btnComprarModal.onclick = () => {
+        adicionarAoCarrinho(produto.nome, produto.preco);
+        fecharModalProduto();
+    };
+
+    modalOverlay.classList.add("aberto");
+}
+
+function fecharModalProduto() {
+    if (modalOverlay) modalOverlay.classList.remove("aberto");
+}
+
+// ==========================================================================
+// RECURSO 7 (EXTRA 2): CONTAGEM REGRESSIVA PARA O NATAL (SOBRE E OFERTAS)
+// ==========================================================================
+function iniciarContagemNatal() {
+    const elSobre = document.getElementById("contagem");
+    const elOfertas = document.getElementById("contagem-ofertas");
+    if (!elSobre && !elOfertas) return;
+
+    function atualizar() {
+        const agora = new Date();
+        let natal = new Date(agora.getFullYear(), 11, 25, 0, 0, 0); // Mês 11 = Dezembro
+        if (agora > natal) {
+            natal = new Date(agora.getFullYear() + 1, 11, 25, 0, 0, 0);
+        }
+
+        const diferenca = natal - agora;
+        const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferenca / (1000 * 60 * 60)) % 24);
+        const minutos = Math.floor((diferenca / (1000 * 60)) % 60);
+        const segundos = Math.floor((diferenca / 1000) % 60);
+
+        const texto = `🎄 Faltam ${dias}d ${horas}h ${minutos}min ${segundos}s para o Natal!`;
+        if (elSobre) elSobre.textContent = texto;
+        if (elOfertas) elOfertas.textContent = texto;
+    }
+
+    atualizar();
+    setInterval(atualizar, 1000);
+}
+
+// ==========================================================================
+// RECURSO 8 (EXTRA 3): VALIDAÇÃO DO FORMULÁRIO DE CONTATO
+// ==========================================================================
+function iniciarValidacaoFormulario() {
+    const form = document.getElementById("form-contato");
+    const caixaMensagem = document.getElementById("mensagem-form");
+    if (!form || !caixaMensagem) return;
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const assunto = document.getElementById("assunto").value.trim();
+        const mensagem = document.getElementById("mensagem").value.trim();
+        const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        caixaMensagem.style.marginTop = "15px";
+        caixaMensagem.style.padding = "12px";
+        caixaMensagem.style.borderRadius = "8px";
+
+        if (nome.length < 3) {
+            caixaMensagem.style.background = "#fde8e8";
+            caixaMensagem.style.color = "#B3202A";
+            caixaMensagem.textContent = "⚠️ Por favor, digite seu nome completo (mínimo 3 letras).";
+        } else if (!emailValido) {
+            caixaMensagem.style.background = "#fde8e8";
+            caixaMensagem.style.color = "#B3202A";
+            caixaMensagem.textContent = "⚠️ Digite um e-mail válido (ex: nome@exemplo.com).";
+        } else if (!assunto) {
+            caixaMensagem.style.background = "#fde8e8";
+            caixaMensagem.style.color = "#B3202A";
+            caixaMensagem.textContent = "⚠️ Informe o assunto da sua mensagem.";
+        } else if (mensagem.length < 10) {
+            caixaMensagem.style.background = "#fde8e8";
+            caixaMensagem.style.color = "#B3202A";
+            caixaMensagem.textContent = "⚠️ Escreva uma mensagem com pelo menos 10 caracteres.";
+        } else {
+            caixaMensagem.style.background = "#e6f4ea";
+            caixaMensagem.style.color = "#1F5D3A";
+            caixaMensagem.textContent = `✅ Obrigado, ${nome}! Sua mensagem sobre "${assunto}" foi enviada com sucesso.`;
+            form.reset();
+        }
+    });
+}
+
+// ==========================================================================
+// RECURSOS 9, 10 E 11 (EXTRAS 4, 5 E 6): MENU, ANIMAÇÃO AO ROLAR E TOPO
+// ==========================================================================
+function iniciarNavegacaoEAnimacoes() {
+    // Menu hambúrguer
+    const btnMenu = document.querySelector(".btn-menu");
+    const menu = document.querySelector(".nav-links");
+    if (btnMenu && menu) {
+        btnMenu.addEventListener("click", () => menu.classList.toggle("aberto"));
+    }
+
+    // Animação ao rolar (.revelar)
+    const elementosRevelar = document.querySelectorAll(".revelar");
+    if (elementosRevelar.length) {
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                if (entrada.isIntersecting) {
+                    entrada.target.classList.add("visivel");
+                }
+            });
+        }, { threshold: 0.1 });
+
+        elementosRevelar.forEach((el) => observador.observe(el));
+    }
+
+    // Botão Voltar ao Topo
+    const btnTopo = document.getElementById("topo");
+    if (btnTopo) {
+        btnTopo.style.display = "none";
+        window.addEventListener("scroll", () => {
+            btnTopo.style.display = window.scrollY > 400 ? "block" : "none";
+        });
+        btnTopo.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+}
+
+// ==========================================================================
+// RECURSO 13 (NOVO - EXTRA 8): EFEITO DE NEVE NATALINA DINÂMICA
+// ==========================================================================
+function iniciarNeveNatalina() {
+    setInterval(() => {
+        if (document.hidden) return; // Economiza processamento se a aba estiver oculta
+
+        const floco = document.createElement("span");
+        floco.className = "floco-neve-js";
+        floco.textContent = "❄";
+        floco.style.left = `${Math.random() * 100}vw`;
+        floco.style.fontSize = `${Math.random() * 10 + 10}px`;
+
+        const duracao = Math.random() * 5 + 6; // Entre 6s e 11s
+        floco.style.animationDuration = `${duracao}s`;
+
+        document.body.appendChild(floco);
+        setTimeout(() => floco.remove(), duracao * 1000);
+    }, 900);
+}
+
+// ==========================================================================
+// INICIALIZAÇÃO GERAL AO CARREGAR A PÁGINA
+// ==========================================================================
+window.addEventListener("DOMContentLoaded", () => {
+    injetarEstilosAuxiliares();
+    iniciarControleAudio();
     iniciarSlideshow();
-    iniciarDestaques();
-    iniciarMusica();
-    iniciarContagem();
-    iniciarCatalogo();
-    iniciarCarrinho();
-    iniciarFormulario();
+    iniciarParallax();
+    atualizarCarrinhoUI();
+    iniciarEventosCarrinho();
+    renderizarDestaquesHome();
+    iniciarCatalogoProdutos();
+    iniciarContagemNatal();
+    iniciarValidacaoFormulario();
+    iniciarNavegacaoEAnimacoes();
+    iniciarNeveNatalina();
 });
