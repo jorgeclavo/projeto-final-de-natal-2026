@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kroma Store | Início - Coleção Natalina</title>
+    <link rel="icon" href="img/outras/Icone-Kroma-img.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <!-- CABEÇALHO E MENU DE NAVEGAÇÃO -->
+    <header class="navbar">
+        <nav class="navbar-container">
+            <div class="logo">
+                <a href="index.html"><img src="img/outras/Logo-Branca-kroma-img.svg" alt="Logotipo Kroma Store"></a>
+            </div>
+            <button class="btn-menu" aria-label="Abrir menu de navegação">☰</button>
+            <div class="nav-links menu">
+                <a href="index.html" class="ativo">Início</a>
+                <a href="produtos.html">Produtos</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="ofertas.html">Ofertas</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="controles-topo">
+                <button id="btn-musica" class="btn-audio">🔊 Tocar Música</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO / BANNER COM EFEITO PARALLAX -->
+        <section class="hero banner">
+            <div class="hero-fundo" data-velocidade="0.4" aria-hidden="true"></div>
+            <div class="hero-content revelar">
+                <img src="img/outras/Logo-Verde-Kroma-img.svg" alt="Logo Kroma Natal" class="hero-logo" id="logoKroma" data-velocidade="0.15">
+                <h1>O Luxo e a Magia da Moda Natalina</h1>
+                <p class="slogan">Celebre as festas de fim de ano com a elegância e exclusividade da Kroma Store.</p>
+                <a href="produtos.html" class="btn-principal">Explorar Coleção</a>
+            </div>
+        </section>
+
+        <!-- SLIDESHOW / CARROSSEL DE DESTAQUES -->
+        <section class="carrossel-container revelar">
+            <h2>Destaques da Estação</h2>
+            <div class="slideshow">
+                <article class="slide ativo">
+                    <img src="img/outras/Logo-Branca-kroma-img.svg" alt="Coleção Exclusiva Festas Kroma">
+                    <div class="slide-caption">
+                        <h3>Coleção Alta Alfaiataria</h3>
+                        <p>Peças refinadas com detalhes natalinos minimalistas.</p>
+                    </div>
+                </article>
+                <article class="slide">
+                    <img src="img/outras/Icone-Kroma-img.svg" alt="Ofertas de Fim de Ano Kroma">
+                    <div class="slide-caption">
+                        <h3>Looks para a Noite Feliz</h3>
+                        <p>Frete grátis e mimos exclusivos em compras acima de R$ 299.</p>
+                    </div>
+                </article>
+                <button id="anterior" class="slide-nav prev" aria-label="Slide anterior">❮</button>
+                <button id="proximo" class="slide-nav next" aria-label="Próximo slide">❯</button>
+            </div>
+        </section>
+
+        <!-- SEÇÃO DE PRODUTOS EM DESTAQUE (GERADOS VIA JS) -->
+        <section class="destaques revelar">
+            <h2>Lançamentos em Destaque</h2>
+            <div id="produtos-destaque" class="grade-produtos">
+                <!-- Os cards marcados com destaque:true em produtos.js serão inseridos aqui -->
+            </div>
+        </section>
+    </main>
+
+    <!-- BOTÃO VOLTAR AO TOPO -->
+    <button id="topo" class="btn-topo" aria-label="Voltar ao topo">↑</button>
+
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 Kroma Store. Todos os direitos reservados. Projeto Acadêmico UNASP.</p>
+            <p>Desenvolvido com HTML5, CSS3 e JavaScript puro.</p>
+        </div>
+    </footer>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

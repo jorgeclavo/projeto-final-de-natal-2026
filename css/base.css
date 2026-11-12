@@ -1,0 +1,347 @@
+/* ==========================================================
+   KROMA STORE | css/base.css
+   Estilos COMPARTILHADOS por todas as páginas.
+   Carregue sempre antes do CSS da página (index.css, produtos.css...).
+   ========================================================== */
+
+
+/* ==========================================================
+   1. VARIÁVEIS
+   O que muda: cores, fontes, bordas, sombras e largura máxima
+   do site INTEIRO. Alterar um valor aqui reflete em todas as páginas.
+   ========================================================== */
+:root {
+    --verde: #0f3d2e;
+    --verde-escuro: #0a2a20;
+    --verde-claro: #1f5a45;
+    --marsala: #7a1f2b;
+    --marsala-escuro: #5e1620;
+    --dourado: #c9a45c;
+    --dourado-claro: #e6cf9d;
+    --creme: #faf6ee;
+    --branco: #ffffff;
+    --texto: #1f2a26;
+    --texto-suave: #5b6862;
+    --borda: #e7dfcd;
+
+    --fonte-titulo: 'Syne', sans-serif;
+    --fonte-texto: 'Poppins', sans-serif;
+
+    --raio: 14px;
+    --raio-pequeno: 8px;
+    --sombra: 0 8px 24px rgba(15, 61, 46, 0.10);
+    --sombra-forte: 0 14px 34px rgba(15, 61, 46, 0.18);
+    --largura: 1180px;
+    --transicao: 0.3s ease;
+}
+
+
+/* ==========================================================
+   2. RESET E BASE
+   O que muda: margens padrão, fonte do corpo, cor de fundo,
+   tamanho dos títulos (h1-h3) e contorno de foco do teclado.
+   ========================================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--fonte-texto);
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--texto);
+    background: var(--creme);
+    -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+h1, h2, h3, h4 {
+    font-family: var(--fonte-titulo);
+    line-height: 1.2;
+    color: var(--verde);
+    font-weight: 700;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 1.5rem; }
+h3 { font-size: 1.15rem; }
+
+:focus-visible {
+    outline: 3px solid var(--dourado);
+    outline-offset: 3px;
+}
+
+main { min-height: 70vh; }
+
+
+/* ==========================================================
+   3. ANIMAÇÃO DE ENTRADA (.revelar)
+   O que muda: o efeito de "subir e aparecer" dos blocos
+   que têm a classe .revelar (não depende de JavaScript).
+   ========================================================== */
+.revelar { animation: subir 0.8s ease both; }
+
+@keyframes subir {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ==========================================================
+   4. NAVBAR (barra superior)
+   O que muda: fundo verde, logo, links do menu, link da página
+   atual (.ativo), botão de música e botão hambúrguer (☰).
+   ========================================================== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--verde);
+    border-bottom: 2px solid var(--dourado);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-container {
+    max-width: var(--largura);
+    margin: 0 auto;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.logo img { height: 42px; width: auto; }
+
+/* botão ☰: escondido no computador, aparece no celular (ver seção 10) */
+.btn-menu {
+    display: none;
+    background: none;
+    border: 1px solid var(--dourado);
+    color: var(--dourado);
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--raio-pequeno);
+}
+
+.nav-links { display: flex; gap: 0.4rem; }
+
+.nav-links a {
+    color: var(--creme);
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    transition: var(--transicao);
+}
+
+.nav-links a:hover { color: var(--dourado-claro); background: rgba(255, 255, 255, 0.08); }
+
+/* link da página atual */
+.nav-links a.ativo {
+    background: var(--marsala);
+    color: var(--branco);
+}
+
+/* grupo à direita da navbar (música e, em produtos, o carrinho) */
+.controles-topo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-audio {
+    background: transparent;
+    color: var(--dourado-claro);
+    border: 1px solid var(--dourado);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    transition: var(--transicao);
+}
+
+.btn-audio:hover { background: var(--dourado); color: var(--verde-escuro); }
+
+
+/* ==========================================================
+   5. BOTÃO COMPRAR
+   O que muda: o botão marsala em formato de pílula usado em
+   Produtos ("Adicionar ao carrinho") e Ofertas ("Ver no Catálogo").
+   ========================================================== */
+.btn-comprar {
+    display: inline-block;
+    background: var(--marsala);
+    color: var(--branco);
+    border: none;
+    border-radius: 999px;
+    padding: 0.8rem 1.8rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    transition: var(--transicao);
+}
+
+.btn-comprar:hover {
+    background: var(--marsala-escuro);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra);
+}
+
+
+/* ==========================================================
+   6. CABEÇALHO DE PÁGINA (.cabecalho-pagina)
+   O que muda: título + subtítulo centralizados com a barrinha
+   dourada embaixo. Usado em Produtos, Ofertas, Sobre e Contato.
+   ========================================================== */
+.cabecalho-pagina {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+}
+
+.cabecalho-pagina h1 { margin-bottom: 0.8rem; }
+.cabecalho-pagina p { color: var(--texto-suave); }
+
+.cabecalho-pagina::after {
+    content: "";
+    display: block;
+    width: 56px;
+    height: 3px;
+    margin: 1.5rem auto 0;
+    background: var(--dourado);
+    border-radius: 3px;
+}
+
+
+/* ==========================================================
+   7. CAMPOS DE FORMULÁRIO
+   O que muda: aparência de input, select e textarea (busca e
+   categoria em Produtos; formulário em Contato) e o estado de foco.
+   ========================================================== */
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    font-family: var(--fonte-texto);
+    font-size: 0.95rem;
+    color: var(--texto);
+    background: var(--branco);
+    border: 1.5px solid var(--borda);
+    border-radius: var(--raio-pequeno);
+    padding: 0.7rem 1rem;
+    transition: var(--transicao);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--verde);
+    box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.35);
+}
+
+textarea { resize: vertical; }
+
+
+/* ==========================================================
+   8. BOTÃO VOLTAR AO TOPO (#topo)
+   O que muda: botão redondo fixo no canto inferior direito.
+   ========================================================== */
+.btn-topo {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 2px solid var(--dourado);
+    background: var(--verde);
+    color: var(--dourado-claro);
+    font-size: 1.2rem;
+    box-shadow: var(--sombra-forte);
+    transition: var(--transicao);
+    z-index: 90;
+}
+
+.btn-topo:hover { background: var(--marsala); transform: translateY(-3px); }
+
+
+/* ==========================================================
+   9. RODAPÉ
+   O que muda: faixa verde-escura com borda dourada no fim da página.
+   ========================================================== */
+footer {
+    background: var(--verde-escuro);
+    color: var(--creme);
+    border-top: 3px solid var(--dourado);
+    text-align: center;
+    padding: 2rem 1.5rem;
+    margin-top: 3rem;
+}
+
+.footer-container p { font-size: 0.85rem; font-weight: 300; }
+.footer-container p:first-child { color: var(--dourado-claro); margin-bottom: 0.2rem; }
+
+
+/* ==========================================================
+   10. RESPONSIVO COMPARTILHADO
+   O que muda: navbar, menu hambúrguer e botão de topo no celular.
+   (Os ajustes responsivos de cada página ficam no CSS da própria página.)
+   ========================================================== */
+
+/* ---- Celular (até 760px): menu hambúrguer ---- */
+@media (max-width: 760px) {
+    .navbar-container {
+        flex-wrap: wrap;
+        padding: 0.7rem 1.2rem;
+    }
+
+    .logo { flex: 1; }
+    .logo img { height: 36px; }
+
+    .btn-menu { display: block; order: 2; }
+
+    .controles-topo { order: 3; }
+    .btn-audio { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
+
+    /* menu fechado por padrão; abre quando o JS adiciona uma destas classes */
+    .nav-links {
+        order: 4;
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.2rem;
+        padding: 0.8rem 0 0.4rem;
+        border-top: 1px solid rgba(201, 164, 92, 0.35);
+    }
+
+    .nav-links.aberto,
+    .nav-links.open,
+    .nav-links.show,
+    .nav-links.mostrar,
+    .nav-links.ativo,
+    .nav-links.active { display: flex; }
+
+    .nav-links a { padding: 0.7rem 1rem; border-radius: var(--raio-pequeno); }
+}
+
+/* ---- Celular (até 600px): botão de topo mais perto da borda ---- */
+@media (max-width: 600px) {
+    .btn-topo { right: 1rem; bottom: 1rem; }
+}
+
+/* ---- Celulares pequenos (até 380px) ---- */
+@media (max-width: 380px) {
+    .btn-audio { font-size: 0.72rem; }
+}
+
+
+/* ==========================================================
+   11. ACESSIBILIDADE: MOVIMENTO REDUZIDO
+   O que muda: desliga animações para quem pediu isso no sistema.
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

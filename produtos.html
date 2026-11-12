@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kroma Store | Catálogo de Produtos</title>
+    <link rel="icon" href="img/outras/Icone-Kroma-img.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/produtos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <nav class="navbar-container">
+            <div class="logo">
+                <a href="index.html"><img src="img/outras/Logo-Branca-kroma-img.svg" alt="Logotipo Kroma Store"></a>
+            </div>
+            <button class="btn-menu" aria-label="Abrir menu de navegação">☰</button>
+            <div class="nav-links menu">
+                <a href="index.html">Início</a>
+                <a href="produtos.html" class="ativo">Produtos</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="ofertas.html">Ofertas</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="controles-topo">
+                <button id="btn-musica" class="btn-audio">🔊 Tocar Música</button>
+                <button id="btn-carrinho" class="btn-carrinho" aria-expanded="false" aria-controls="carrinho-panel">
+                    🛒 Carrinho <span id="qtd-carrinho-botao">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <aside id="carrinho-panel" class="carrinho-panel" aria-live="polite">
+        <div class="carrinho-header">
+            <h3>Seu carrinho</h3>
+            <button id="fechar-carrinho" class="fechar-carrinho" type="button" aria-label="Fechar carrinho">✕</button>
+        </div>
+        <ul id="lista-carrinho" class="lista-carrinho"></ul>
+        <div class="carrinho-footer">
+            <span>Total</span>
+            <strong id="total-carrinho-panel">R$ 0,00</strong>
+        </div>
+    </aside>
+
+    <main class="container-produtos">
+        <section class="cabecalho-pagina">
+            <h1>Catálogo de Produtos Natalinos</h1>
+            <p>Explore peças exclusivas com sofisticação, conforto e o espírito de Natal em cada detalhe.</p>
+        </section>
+
+        <aside class="resumo-carrinho">
+            <span>🛒 Itens no carrinho: <strong id="qtd-carrinho">0</strong></span>
+            <span>Total: <strong id="total-carrinho">R$ 0,00</strong></span>
+        </aside>
+
+        <section class="barras-filtros">
+            <div class="campo-busca">
+                <label for="busca">Buscar produto:</label>
+                <input type="text" id="busca" placeholder="Digite o nome do produto...">
+            </div>
+            <div class="campo-categoria">
+                <label for="categoria">Categoria:</label>
+                <select id="categoria">
+                    <option value="todas">Todas as categorias</option>
+                    <option value="Vestidos">Vestidos</option>
+                    <option value="Camisas e Blusas">Camisas e Blusas</option>
+                    <option value="Casacos e Blazers">Casacos e Blazers</option>
+                    <option value="Saias e Calças">Saias e Calças</option>
+                    <option value="Kits e Acessórios">Kits e Acessórios</option>
+                </select>
+            </div>
+        </section>
+
+        <p id="contador" class="contador-produtos">Carregando catálogo...</p>
+        <section id="lista-produtos" aria-live="polite"></section>
+    </main>
+
+    <button id="topo" class="btn-topo" aria-label="Voltar ao topo">↑</button>
+
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 Kroma Store. Todos os direitos reservados. Projeto Acadêmico UNASP.</p>
+            <p>Desenvolvido com HTML5, CSS3 e JavaScript puro.</p>
+        </div>
+    </footer>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

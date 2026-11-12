@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kroma Store | Ofertas Especiais</title>
+    <link rel="icon" href="img/outras/Icone-Kroma-img.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/ofertas.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- CABEÇALHO E MENU DE NAVEGAÇÃO -->
+    <header class="navbar">
+        <nav class="navbar-container">
+            <div class="logo">
+                <a href="index.html"><img src="img/outras/Logo-Branca-kroma-img.svg" alt="Logotipo Kroma Store"></a>
+            </div>
+            <button class="btn-menu" aria-label="Abrir menu de navegação">☰</button>
+            <div class="nav-links menu">
+                <a href="index.html">Início</a>
+                <a href="produtos.html">Produtos</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="ofertas.html" class="ativo">Ofertas</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="controles-topo">
+                <button id="btn-musica" class="btn-audio">🔊 Tocar Música</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container-ofertas">
+        <section class="cabecalho-pagina revelar">
+            <h1>Ofertas Exclusivas de Natal</h1>
+            <p>Aproveite promoções imperdíveis por tempo limitado para compor seus looks festivos.</p>
+        </section>
+
+        <!-- BANNER DE DESTAQUE COM PROMOÇÃO -->
+        <section class="banner-promocao revelar">
+            <div class="conteudo-promo">
+                <h2>Promoção Relâmpago da Ceia</h2>
+                <p>Até 30% OFF em vestidos selecionados e peças de alfaiataria.</p>
+                <p class="contagem-oferta" id="contagem-ofertas">Calculando tempo restante...</p>
+            </div>
+        </section>
+
+        <!-- GALERIA DE OFERTAS COM DESTACADOS -->
+        <section class="galeria-ofertas revelar">
+            <h2>Galeria de Destaques em Promoção</h2>
+            <div class="grade-ofertas">
+                <article class="card-oferta">
+                    <img src="img/roupas/VestidoMidiVermelhoQueimadocomTraçosLinearesFinosdoPapaiNoel.jpg" alt="Vestido Midi Vermelho Queimado" loading="lazy" class="img-oferta">
+                    <h3>Vestido Midi Vermelho Queimado</h3>
+                    <p class="preco-antigo">De: R$ 250,00</p>
+                    <p class="preco-novo">Por: R$ 189,90</p>
+                    <a href="produtos.html" class="btn-comprar">Ver no Catálogo</a>
+                </article>
+
+                <article class="card-oferta">
+                    <img src="img/roupas/BlazerAlfaiatariaMarsalacomForroInternoEstampadoemPadronagemNatalina.jpg" alt="Blazer Alfaiataria Marsala" loading="lazy" class="img-oferta">
+                    <h3>Blazer Alfaiataria Marsala</h3>
+                    <p class="preco-antigo">De: R$ 320,00</p>
+                    <p class="preco-novo">Por: R$ 249,90</p>
+                    <a href="produtos.html" class="btn-comprar">Ver no Catálogo</a>
+                </article>
+
+                <article class="card-oferta">
+                    <img src="img/roupas/CamisaSocialdeLinhoBrancacomBordadoMonocromáticodeRenanaGola.jpg" alt="Camisa Social de Linho Branca" loading="lazy" class="img-oferta">
+                    <h3>Camisa Social de Linho Branca</h3>
+                    <p class="preco-antigo">De: R$ 180,00</p>
+                    <p class="preco-novo">Por: R$ 139,90</p>
+                    <a href="produtos.html" class="btn-comprar">Ver no Catálogo</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- BOTÃO VOLTAR AO TOPO -->
+    <button id="topo" class="btn-topo" aria-label="Voltar ao topo">↑</button>
+
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 Kroma Store. Todos os direitos reservados. Projeto Acadêmico UNASP.</p>
+            <p>Desenvolvido com HTML5, CSS3 e JavaScript puro.</p>
+        </div>
+    </footer>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

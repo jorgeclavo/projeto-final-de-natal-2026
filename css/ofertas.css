@@ -1,0 +1,123 @@
+/* ==========================================================
+   KROMA STORE | css/ofertas.css
+   Página OFERTAS (ofertas.html). Usar junto com base.css.
+   (O botão "Ver no Catálogo" usa .btn-comprar, do base.css.)
+   ========================================================== */
+
+
+/* ==========================================================
+   1. CONTAINER DA PÁGINA
+   O que muda: largura máxima e espaçamento da página.
+   ========================================================== */
+.container-ofertas {
+    max-width: var(--largura);
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem;
+}
+
+
+/* ==========================================================
+   2. BANNER DE PROMOÇÃO
+   O que muda: faixa marsala com borda dourada ("Promoção
+   Relâmpago da Ceia").
+   ========================================================== */
+.banner-promocao {
+    text-align: center;
+    background:
+        radial-gradient(circle at 80% 20%, rgba(201,164,92,.25), transparent 50%),
+        var(--marsala);
+    color: var(--branco);
+    border-radius: var(--raio);
+    padding: 3rem 1.5rem;
+    margin-bottom: 3rem;
+    border: 2px solid var(--dourado);
+}
+
+.banner-promocao h2 { color: var(--dourado-claro); margin-bottom: 0.5rem; }
+.banner-promocao p { font-weight: 300; font-size: 1.1rem; }
+
+/* contagem regressiva até o Natal (preenchida pelo JS) */
+.contagem-oferta {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.5rem 1.4rem;
+    border: 1px solid var(--dourado);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.18);
+    font-family: var(--fonte-titulo);
+    font-weight: 700 !important;
+    font-size: clamp(1rem, 3vw, 1.4rem) !important;
+    color: var(--dourado-claro);
+}
+
+
+/* ==========================================================
+   3. GALERIA DE OFERTAS
+   O que muda: grade com os cards de promoção (3 por linha no
+   computador; quebra automaticamente em telas menores).
+   ========================================================== */
+.galeria-ofertas h2 { text-align: center; }
+
+.grade-ofertas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+
+/* ==========================================================
+   4. CARD DE OFERTA
+   O que muda: caixa branca, imagem, preço antigo (riscado) e
+   preço novo em destaque.
+   ========================================================== */
+.card-oferta {
+    text-align: center;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    padding: 1.5rem;
+    transition: var(--transicao);
+}
+
+.card-oferta:hover { transform: translateY(-4px); box-shadow: var(--sombra-forte); border-color: var(--dourado); }
+
+.img-oferta {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: var(--creme);
+    border-radius: var(--raio-pequeno);
+    margin-bottom: 1rem;
+}
+
+.card-oferta h3 { margin-bottom: 0.6rem; }
+
+.preco-antigo {
+    color: var(--texto-suave);
+    text-decoration: line-through;
+    font-size: 0.9rem;
+}
+
+.preco-novo {
+    font-family: var(--fonte-titulo);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--marsala);
+    margin-bottom: 1rem;
+}
+
+
+/* ==========================================================
+   5. RESPONSIVO DA PÁGINA OFERTAS
+   O que muda: espaçamentos em tablet e celular.
+   ========================================================== */
+
+/* ---- Tablet (até 900px) ---- */
+@media (max-width: 900px) {
+    .container-ofertas { padding: 2.5rem 1.2rem; }
+}
+
+/* ---- Celular (até 600px) ---- */
+@media (max-width: 600px) {
+    .banner-promocao { padding: 2rem 1.2rem; }
+}

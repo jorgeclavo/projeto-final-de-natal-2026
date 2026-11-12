@@ -1,0 +1,403 @@
+/* ==========================================================
+   KROMA STORE | css/produtos.css
+   Página PRODUTOS (produtos.html). Usar junto com base.css.
+
+   IMPORTANTE: a grade do catálogo usa a classe .grade-catalogo
+   (e NÃO .grade-produtos, que é da página Início). Isso evita
+   que as regras de uma página bagunçem a outra.
+   ========================================================== */
+
+
+/* ==========================================================
+   1. CONTAINER DA PÁGINA
+   O que muda: largura máxima e espaçamento da página.
+   ========================================================== */
+.container-produtos {
+    max-width: var(--largura);
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem;
+}
+
+
+/* ==========================================================
+   2. BOTÃO DO CARRINHO (na navbar)
+   O que muda: botão "🛒 Carrinho" e a bolinha com a quantidade.
+   ========================================================== */
+.btn-carrinho {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--creme);
+    border: 1px solid var(--dourado);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: var(--transicao);
+}
+
+.btn-carrinho:hover {
+    background: var(--dourado);
+    color: var(--verde-escuro);
+}
+
+.btn-carrinho span {
+    background: var(--marsala);
+    color: var(--branco);
+    min-width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   3. PAINEL LATERAL DO CARRINHO (#carrinho-panel)
+   O que muda: caixa flutuante com a lista de itens e o total.
+   Fica escondida; o JS adiciona a classe .ativo para mostrar.
+   ========================================================== */
+.carrinho-panel {
+    position: fixed;
+    top: 5.5rem;
+    right: 1.5rem;
+    width: min(360px, calc(100vw - 2rem));
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra-forte);
+    padding: 1rem;
+    z-index: 120;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    transition: var(--transicao);
+}
+
+.carrinho-panel.ativo {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.carrinho-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.carrinho-header h3 { margin: 0; }
+
+.fechar-carrinho {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--texto-suave);
+    cursor: pointer;
+}
+
+.lista-carrinho {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 260px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.lista-carrinho li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--borda);
+    color: var(--texto);
+}
+
+.lista-carrinho li strong { color: var(--verde); }
+
+/* item do carrinho: nome + subtotal em cima, botões embaixo */
+.lista-carrinho li:not(.carrinho-vazio) {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.item-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.item-nome { font-size: 0.92rem; }
+
+.item-acoes {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.item-qtd {
+    min-width: 1.6rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.btn-qtd,
+.btn-remover {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    border: 1px solid var(--borda);
+    background: var(--creme);
+    color: var(--verde);
+    font-size: 1rem;
+    line-height: 1;
+    transition: var(--transicao);
+}
+
+.btn-qtd:hover { background: var(--verde); color: var(--branco); }
+
+.btn-remover {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--marsala);
+}
+
+.btn-remover:hover { background: var(--marsala); color: var(--branco); }
+
+.carrinho-vazio {
+    color: var(--texto-suave);
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+}
+
+.carrinho-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--borda);
+    color: var(--verde);
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   4. RESUMO DO CARRINHO (faixa verde acima dos filtros)
+   O que muda: barra com "Itens no carrinho" e "Total".
+   ========================================================== */
+.resumo-carrinho {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    background: var(--verde);
+    color: var(--creme);
+    padding: 0.9rem 1.5rem;
+    border-radius: var(--raio);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.resumo-carrinho strong { color: var(--dourado-claro); }
+
+
+/* ==========================================================
+   5. FILTROS (busca e categoria)
+   O que muda: layout dos campos de busca/categoria e os rótulos.
+   ========================================================== */
+.barras-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.campo-busca { flex: 2; min-width: 220px; }
+.campo-categoria { flex: 1; min-width: 200px; }
+
+.barras-filtros label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--verde);
+    margin-bottom: 0.35rem;
+}
+
+.contador-produtos {
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+    margin-bottom: 1.5rem;
+}
+
+
+/* ==========================================================
+   6. LISTA DO CATÁLOGO (#lista-produtos)
+   O que muda: é só um bloco comum; as categorias ficam
+   EMPILHADAS (uma embaixo da outra), cada uma com sua grade.
+   ========================================================== */
+#lista-produtos { display: block; }
+
+.categoria-grupo {
+    width: 100%;
+    margin-bottom: 2.5rem;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(15, 61, 46, 0.08);
+    border-radius: 22px;
+    padding: 1.4rem 1rem 1rem;
+}
+
+/* título da categoria (Vestidos, Camisas e Blusas...) */
+.categoria-grupo h2 {
+    margin: 0 0 1.2rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 2px solid rgba(201, 164, 92, 0.75);
+    color: var(--verde);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    line-height: 1.1;
+}
+
+
+/* ==========================================================
+   7. GRADE DE CARDS (.grade-catalogo)
+   O que muda: quantidade de colunas dos produtos dentro de
+   cada categoria (4 no computador; diminui nas telas menores,
+   veja a seção 9).
+   ========================================================== */
+.grade-catalogo,
+.categoria-grupo > .grade-produtos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.8rem;
+    align-items: stretch;
+}
+
+
+/* ==========================================================
+   8. CARD DE PRODUTO (.produto-card)
+   O que muda: caixa do produto, foto, etiqueta de categoria,
+   nome, descrição, preço e botão "Adicionar ao carrinho".
+   ========================================================== */
+.produto-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    justify-self: center;
+    background: linear-gradient(180deg, #ffffff 0%, #f8f4ee 100%);
+    border: 1px solid rgba(201, 164, 92, 0.45);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: var(--transicao);
+    height: 100%;
+    min-height: 620px;
+    box-shadow: 0 8px 18px rgba(15, 61, 46, 0.05);
+}
+
+.produto-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 30px rgba(15, 61, 46, 0.12);
+    border-color: var(--dourado);
+}
+
+/* foto do produto */
+.produto-card img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    background: var(--verde);
+    display: block;
+}
+
+/* área de texto abaixo da foto */
+.produto-info,
+.produto-card > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0 1.2rem 1.2rem;
+}
+
+/* etiqueta verde com o nome da categoria */
+.produto-card .produto-categoria {
+    display: inline-block;
+    width: fit-content;
+    margin-top: 1rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: var(--verde);
+    color: var(--branco);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.produto-card h3 {
+    margin: 0.8rem 0 0.5rem;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.produto-card .produto-descricao {
+    margin: 0;
+    color: var(--texto-suave);
+    flex: 1;
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
+.produto-card .produto-valor {
+    margin: 0.8rem 0 0.7rem;
+    font-family: var(--fonte-titulo);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--marsala);
+}
+
+.produto-card .produto-acoes { margin-top: auto; }
+
+.produto-card .btn-comprar {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+
+/* ==========================================================
+   9. RESPONSIVO DA PÁGINA PRODUTOS
+   O que muda: colunas da grade (4 → 3 → 2 → 1) e espaçamentos.
+   ========================================================== */
+
+/* ---- Telas médias (até 1260px): 3 colunas ---- */
+@media (max-width: 1260px) {
+    .grade-catalogo,
+    .categoria-grupo > .grade-produtos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ---- Tablet (até 980px): 2 colunas ---- */
+@media (max-width: 980px) {
+    .grade-catalogo,
+    .categoria-grupo > .grade-produtos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---- Tablet (até 900px): espaçamento da página ---- */
+@media (max-width: 900px) {
+    .container-produtos { padding: 2.5rem 1.2rem; }
+}
+
+/* ---- Celular (até 640px): 1 coluna ---- */
+@media (max-width: 640px) {
+    .grade-catalogo,
+    .categoria-grupo > .grade-produtos { grid-template-columns: 1fr; }
+}
+
+/* ---- Celular (até 600px): resumo do carrinho em coluna ---- */
+@media (max-width: 600px) {
+    .resumo-carrinho { flex-direction: column; text-align: center; }
+}

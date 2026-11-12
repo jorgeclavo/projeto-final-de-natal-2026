@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kroma Store | Contato</title>
+    <link rel="icon" href="img/outras/Icone-Kroma-img.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/contato.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- CABEÇALHO E MENU DE NAVEGAÇÃO -->
+    <header class="navbar">
+        <nav class="navbar-container">
+            <div class="logo">
+                <a href="index.html"><img src="img/outras/Logo-Branca-kroma-img.svg" alt="Logotipo Kroma Store"></a>
+            </div>
+            <button class="btn-menu" aria-label="Abrir menu de navegação">☰</button>
+            <div class="nav-links menu">
+                <a href="index.html">Início</a>
+                <a href="produtos.html">Produtos</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="ofertas.html">Ofertas</a>
+                <a href="contato.html" class="ativo">Contato</a>
+            </div>
+            <div class="controles-topo">
+                <button id="btn-musica" class="btn-audio">🔊 Tocar Música</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container-contato">
+        <section class="cabecalho-pagina revelar">
+            <h1>Fale Conosco</h1>
+            <p>Dúvidas sobre nossos produtos ou pedidos? Mande uma mensagem para a equipe Kroma Store.</p>
+        </section>
+
+        <div class="grid-contato revelar">
+            <!-- FORMULÁRIO VALIDADO PELO JAVASCRIPT -->
+            <section class="secao-formulario">
+                <h2>Envie sua Mensagem</h2>
+                <form id="form-contato" novalidate>
+                    <div class="grupo-campo">
+                        <label for="nome">Nome Completo:</label>
+                        <input type="text" id="nome" name="nome" placeholder="Digite seu nome..." required>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label for="email">E-mail de Contato:</label>
+                        <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label for="assunto">Assunto:</label>
+                        <input type="text" id="assunto" name="assunto" placeholder="Assunto da mensagem..." required>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label for="mensagem">Mensagem:</label>
+                        <textarea id="mensagem" name="mensagem" rows="5" placeholder="Escreva sua mensagem aqui..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-enviar">Enviar Mensagem</button>
+                </form>
+
+                <!-- MENSAGEM DE ERRO/SUCESSO EXIBIDA VIA JS -->
+                <div id="mensagem-form" class="caixa-mensagem"></div>
+            </section>
+
+            <!-- INFORMAÇÕES DE CONTATO -->
+            <aside class="informacoes-loja">
+                <h2>Atendimento Kroma</h2>
+                <p><strong>Endereço:</strong> Av. Prof. Samuel Elias, 100 - UNASP Campus Hortolândia / SP</p>
+                <p><strong>Telefone:</strong> (19) 99999-2026</p>
+                <p><strong>Atendimento:</strong> Segunda a Sexta, das 08h às 18h</p>
+                <p><strong>E-mail:</strong> contato@kromastore.com.br</p>
+
+                <div class="redes-sociais">
+                    <h3>Redes Sociais</h3>
+                    <p>Instagram: @kroma.store</p>
+                    <p>GitHub: github.com/kroma-store</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- BOTÃO VOLTAR AO TOPO -->
+    <button id="topo" class="btn-topo" aria-label="Voltar ao topo">↑</button>
+
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 Kroma Store. Todos os direitos reservados. Projeto Acadêmico UNASP.</p>
+            <p>Desenvolvido com HTML5, CSS3 e JavaScript puro.</p>
+        </div>
+    </footer>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

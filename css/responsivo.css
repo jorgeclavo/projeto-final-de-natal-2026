@@ -1,0 +1,88 @@
+/* ==========================================================
+   KROMA STORE | responsivo.css
+   Ajustes para tablets e celulares
+   ========================================================== */
+
+/* ---------- TABLET ---------- */
+@media (max-width: 900px) {
+    .grid-contato { grid-template-columns: 1fr; }
+
+    .hero { padding: 4.5rem 1.5rem 5rem; }
+    .hero-logo { height: 90px; }
+
+    .slide { padding: 2.5rem 3.5rem 1.5rem; }
+
+    .carrossel-container,
+    .destaques,
+    .container-produtos,
+    .container-ofertas,
+    .container-contato,
+    .container-sobre { padding: 2.5rem 1.2rem; }
+}
+
+/* ---------- CELULAR: MENU HAMBÚRGUER ---------- */
+@media (max-width: 760px) {
+    .navbar-container {
+        flex-wrap: wrap;
+        padding: 0.7rem 1.2rem;
+    }
+
+    .logo { flex: 1; }
+    .logo img { height: 36px; }
+
+    .btn-menu { display: block; order: 2; }
+
+    .controles-topo { order: 3; }
+    .btn-audio { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
+
+    /* menu fechado por padrão; abre quando o JS adiciona uma destas classes */
+    .nav-links {
+        order: 4;
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.2rem;
+        padding: 0.8rem 0 0.4rem;
+        border-top: 1px solid rgba(201, 164, 92, 0.35);
+    }
+
+    .nav-links.aberto,
+    .nav-links.open,
+    .nav-links.show,
+    .nav-links.mostrar,
+    .nav-links.ativo,
+    .nav-links.active { display: flex; }
+
+    .nav-links a { padding: 0.7rem 1rem; border-radius: var(--raio-pequeno); }
+}
+
+/* ---------- CELULAR ---------- */
+@media (max-width: 600px) {
+    .hero { padding: 3.5rem 1.2rem 4rem; }
+    .hero-logo { height: 76px; }
+    .slogan { font-size: 1rem; }
+
+    .slide { padding: 2rem 3rem 1.2rem; }
+    .slide img { height: 110px; }
+    .slide-nav { width: 36px; height: 36px; }
+    .slide-nav.prev { left: 0.5rem; }
+    .slide-nav.next { right: 0.5rem; }
+
+    .grade-produtos { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .grade-produtos h3, .grade-produtos h4 { font-size: 0.9rem; }
+
+    .resumo-carrinho { flex-direction: column; text-align: center; }
+
+    .secao-formulario,
+    .informacoes-loja { padding: 1.5rem; }
+
+    .banner-promocao { padding: 2rem 1.2rem; }
+
+    .btn-topo { right: 1rem; bottom: 1rem; }
+}
+
+/* ---------- CELULARES PEQUENOS ---------- */
+@media (max-width: 380px) {
+    .grade-produtos { grid-template-columns: 1fr; }
+    .btn-audio { font-size: 0.72rem; }
+}

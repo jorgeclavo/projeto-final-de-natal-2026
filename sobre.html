@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kroma Store | Sobre Nós</title>
+    <link rel="icon" href="img/outras/Icone-Kroma-img.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/sobre.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- CABEÇALHO E MENU DE NAVEGAÇÃO -->
+    <header class="navbar">
+        <nav class="navbar-container">
+            <div class="logo">
+                <a href="index.html"><img src="img/outras/Logo-Branca-kroma-img.svg" alt="Logotipo Kroma Store"></a>
+            </div>
+            <button class="btn-menu" aria-label="Abrir menu de navegação">☰</button>
+            <div class="nav-links menu">
+                <a href="index.html">Início</a>
+                <a href="produtos.html">Produtos</a>
+                <a href="sobre.html" class="ativo">Sobre</a>
+                <a href="ofertas.html">Ofertas</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="controles-topo">
+                <button id="btn-musica" class="btn-audio">🔊 Tocar Música</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container-sobre">
+        <section class="cabecalho-pagina revelar">
+            <h1>Sobre a Kroma Store</h1>
+            <p>Sofisticação, alfaiataria e o espírito natalino em perfeita sintonia.</p>
+        </section>
+
+        <!-- CONTAGEM REGRESSIVA ATÉ O NATAL -->
+        <section class="bloco-contador revelar">
+            <h2>Contagem Regressiva para o Natal</h2>
+            <p id="contagem" class="display-contagem">Calculando tempo restante...</p>
+        </section>
+
+        <!-- HISTÓRIA DA LOJA -->
+        <section class="historia-loja revelar">
+            <h2>Nossa História</h2>
+            <article>
+                <p>A Kroma Store nasceu do desejo de integrar a alta moda ao encanto das festividade natalinas. Criada como projeto conceitual no Colégio UNASP, a marca redefine o vestuário de fim de ano unindo paletas sofisticadas como verde-floresta, marsala e dourado a cortes minimalistas e elegantes.</p>
+            </article>
+        </section>
+
+        <!-- MISSÃO, VISÃO E VALORES -->
+        <section class="pilares-loja revelar">
+            <div class="pilar-card">
+                <h3>Missão</h3>
+                <p>Oferecer peças de vestuário festivo que unam sofisticação, conforto e o encanto do Natal.</p>
+            </div>
+            <div class="pilar-card">
+                <h3>Visão</h3>
+                <p>Ser a marca referência em moda natalina e e-commerce conceitual no ambiente acadêmico do UNASP.</p>
+            </div>
+            <div class="pilar-card">
+                <h3>Valores</h3>
+                <p>Atenção aos detalhes, elegância atemporal, excelência técnica em código e respeito à diversidade.</p>
+            </div>
+        </section>
+
+        <!-- APRESENTAÇÃO DA EQUIPE -->
+        <section class="equipe-secao revelar">
+            <h2>Equipe de Desenvolvimento</h2>
+            <div class="grade-equipe">
+                <article class="membro-card">
+                    <img src="img/outras/bruno.png" alt="Avatar de Bruno Jorge" class="avatar-membro">
+                    <h3>Bruno Jorge</h3>
+                    <p class="cargo">Desenvolvedor HTML</p>
+                    <p>Estruturação do site</p>
+                </article>
+                <article class="membro-card">
+                    <img src="img/outras/jorge.png" alt="Avatar de Pedro Lucas" class="avatar-membro">
+                    <h3>Pedro Lucas</h3>
+                    <p class="cargo">Desenvolvedor CSS</p>
+                    <p>Estilização da identidade visual</p>
+                </article>
+                <article class="membro-card">
+                    <img src="img/outras/enzo.png" alt="Avatar de Enzo Yudi" class="avatar-membro">
+                    <h3>Enzo Yudi</h3>
+                    <p class="cargo">Desenvolvedor JavaScript</p>
+                    <p>Implementação dos recursos interativos</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- BOTÃO VOLTAR AO TOPO -->
+    <button id="topo" class="btn-topo" aria-label="Voltar ao topo">↑</button>
+
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 Kroma Store. Todos os direitos reservados. Projeto Acadêmico UNASP.</p>
+            <p>Desenvolvido com HTML5, CSS3 e JavaScript puro.</p>
+        </div>
+    </footer>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

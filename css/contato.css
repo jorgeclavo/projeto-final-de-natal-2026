@@ -1,0 +1,142 @@
+/* ==========================================================
+   KROMA STORE | css/contato.css
+   Página CONTATO (contato.html). Usar junto com base.css.
+   (Os campos input/textarea vêm do base.css, seção 7.)
+   ========================================================== */
+
+
+/* ==========================================================
+   1. CONTAINER DA PÁGINA
+   O que muda: largura máxima e espaçamento da página.
+   ========================================================== */
+.container-contato {
+    max-width: var(--largura);
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem;
+}
+
+
+/* ==========================================================
+   2. LAYOUT EM DUAS COLUNAS
+   O que muda: formulário à esquerda e informações da loja à
+   direita (vira uma coluna só no tablet/celular).
+   ========================================================== */
+.grid-contato {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.secao-formulario,
+.informacoes-loja {
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    padding: 2rem;
+}
+
+
+/* ==========================================================
+   3. FORMULÁRIO
+   O que muda: rótulos dos campos, espaçamento entre eles e o
+   botão "Enviar Mensagem".
+   ========================================================== */
+.grupo-campo { margin-bottom: 1.2rem; }
+
+.grupo-campo label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--verde);
+    margin-bottom: 0.35rem;
+}
+
+.btn-enviar {
+    display: inline-block;
+    background: var(--marsala);
+    color: var(--branco);
+    border: none;
+    border-radius: 999px;
+    padding: 0.8rem 1.8rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    transition: var(--transicao);
+}
+
+.btn-enviar:hover {
+    background: var(--marsala-escuro);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra);
+}
+
+
+/* ==========================================================
+   4. MENSAGENS DE ERRO E SUCESSO (#mensagem-form)
+   O que muda: caixa que o JavaScript preenche após validar o
+   formulário, e a borda vermelha dos campos com erro.
+   ========================================================== */
+.caixa-mensagem {
+    margin-top: 1rem;
+    padding: 0;
+    border-radius: var(--raio-pequeno);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.caixa-mensagem:not(:empty) { padding: 0.9rem 1.1rem; }
+
+.caixa-mensagem.erro, .caixa-mensagem.mensagem-erro {
+    background: #fbeaec; color: var(--marsala-escuro); border: 1px solid var(--marsala);
+}
+
+.caixa-mensagem.sucesso, .caixa-mensagem.mensagem-sucesso {
+    background: #e6f2ec; color: var(--verde); border: 1px solid var(--verde-claro);
+}
+
+input.erro, textarea.erro, input.invalido, textarea.invalido { border-color: var(--marsala); }
+
+
+/* ==========================================================
+   5. INFORMAÇÕES DA LOJA (coluna verde à direita)
+   O que muda: cartão verde com endereço, telefone, e-mail e
+   redes sociais.
+   ========================================================== */
+.informacoes-loja {
+    background: var(--verde);
+    color: var(--creme);
+    border-color: var(--verde);
+}
+
+.informacoes-loja h2,
+.informacoes-loja h3 { color: var(--dourado-claro); }
+
+.informacoes-loja p { font-size: 0.92rem; margin-bottom: 0.7rem; font-weight: 300; }
+.informacoes-loja strong { color: var(--dourado-claro); font-weight: 600; }
+
+.redes-sociais {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(201, 164, 92, 0.4);
+}
+
+.redes-sociais h3 { margin-bottom: 0.8rem; font-size: 1rem; }
+
+
+/* ==========================================================
+   6. RESPONSIVO DA PÁGINA CONTATO
+   O que muda: colunas viram uma só e o espaçamento diminui.
+   ========================================================== */
+
+/* ---- Tablet (até 900px) ---- */
+@media (max-width: 900px) {
+    .grid-contato { grid-template-columns: 1fr; }
+    .container-contato { padding: 2.5rem 1.2rem; }
+}
+
+/* ---- Celular (até 600px) ---- */
+@media (max-width: 600px) {
+    .secao-formulario,
+    .informacoes-loja { padding: 1.5rem; }
+}

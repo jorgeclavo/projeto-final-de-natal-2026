@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="kroma store">
+  <defs>
+    <clipPath id="lente"><circle cx="38" cy="50" r="26"/></clipPath>
+  </defs>
+  <circle cx="38" cy="50" r="26" fill="#C8102E"/>
+  <circle cx="62" cy="50" r="26" fill="#0F6B45"/>
+  <circle cx="62" cy="50" r="26" fill="#F2B632" clip-path="url(#lente)"/>
+</svg>

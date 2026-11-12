@@ -1,0 +1,130 @@
+/* ==========================================================
+   KROMA STORE | css/sobre.css
+   Página SOBRE (sobre.html). Usar junto com base.css.
+   ========================================================== */
+
+
+/* ==========================================================
+   1. CONTAINER DA PÁGINA
+   O que muda: largura máxima e espaçamento da página.
+   ========================================================== */
+.container-sobre {
+    max-width: var(--largura);
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem;
+}
+
+
+/* ==========================================================
+   2. CONTAGEM REGRESSIVA PARA O NATAL
+   O que muda: bloco verde com o relógio (#contagem) em dourado.
+   ========================================================== */
+.bloco-contador {
+    text-align: center;
+    background: var(--verde);
+    border-radius: var(--raio);
+    padding: 2.5rem 1.5rem;
+    margin-bottom: 3rem;
+    border-bottom: 4px solid var(--dourado);
+}
+
+.bloco-contador h2 { color: var(--creme); font-size: 1.3rem; margin-bottom: 0.8rem; }
+
+.display-contagem {
+    font-family: var(--fonte-titulo);
+    font-weight: 800;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--dourado-claro);
+    letter-spacing: 0.02em;
+}
+
+
+/* ==========================================================
+   3. NOSSA HISTÓRIA
+   O que muda: texto centralizado com largura limitada.
+   ========================================================== */
+.historia-loja {
+    max-width: 760px;
+    margin: 0 auto 3rem;
+    text-align: center;
+}
+
+.historia-loja p { color: var(--texto-suave); font-size: 1.05rem; }
+
+
+/* ==========================================================
+   4. MISSÃO, VISÃO E VALORES (pilares)
+   O que muda: três cards com borda marsala no topo.
+   ========================================================== */
+.pilares-loja {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+}
+
+.pilar-card {
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-top: 4px solid var(--marsala);
+    border-radius: var(--raio);
+    padding: 1.8rem;
+}
+
+.pilar-card h3 { margin-bottom: 0.6rem; }
+.pilar-card p { font-size: 0.92rem; color: var(--texto-suave); }
+
+
+/* ==========================================================
+   5. EQUIPE DE DESENVOLVIMENTO
+   O que muda: grade de cards, avatar redondo e cargo de cada membro.
+   ========================================================== */
+.equipe-secao h2 { text-align: center; }
+
+.grade-equipe {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.membro-card {
+    text-align: center;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    padding: 2rem 1.5rem;
+    transition: var(--transicao);
+}
+
+.membro-card:hover { box-shadow: var(--sombra); border-color: var(--dourado); }
+
+.avatar-membro {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    object-position: center top;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: var(--verde);
+    border: 3px solid var(--dourado);
+}
+
+.cargo {
+    color: var(--marsala);
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 0.6rem;
+}
+
+.membro-card p:last-child { font-size: 0.9rem; color: var(--texto-suave); }
+
+
+/* ==========================================================
+   6. RESPONSIVO DA PÁGINA SOBRE
+   O que muda: espaçamento da página em tablet.
+   ========================================================== */
+
+/* ---- Tablet (até 900px) ---- */
+@media (max-width: 900px) {
+    .container-sobre { padding: 2.5rem 1.2rem; }
+}

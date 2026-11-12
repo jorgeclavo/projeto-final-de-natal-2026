@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 304 104" role="img" aria-label="kroma">
+  <defs>
+    <clipPath id="lente"><circle cx="125" cy="68" r="22"/></clipPath>
+  </defs>
+  <!-- versão monocromática: funciona em fundo vermelho ou verde -->
+  <circle cx="141" cy="68" r="22" fill="#F2B632" clip-path="url(#lente)"/>
+  <g fill="none" stroke="#FFF8EC" stroke-width="5">
+    <circle cx="125" cy="68" r="19.5"/>
+    <circle cx="141" cy="68" r="19.5"/>
+  </g>
+
+  <g fill="none" stroke="#FFF8EC" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 20V84M46 52L20 72M31 64L52 84"/>
+    <path d="M70 84V52M70 70C70 58 78 52 90 52"/>
+    <path d="M178 84V52M178 66C178 54 188 52 194 52C202 52 206 58 206 66V84M206 66C206 54 214 52 222 52C230 52 234 58 234 66V84"/>
+    <circle cx="270" cy="68" r="16"/>
+    <path d="M286 52V84"/>
+  </g>
+</svg>
